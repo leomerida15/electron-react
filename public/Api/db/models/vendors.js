@@ -5,8 +5,14 @@ module.exports = (sequelize, type) => {
 		'vendors',
 		{
 			id: { type: INTEGER, primaryKey: true, autoIncrement: true },
-			id_client: { type: INTEGER },
-			id_user: { type: STRING },
+			name: { type: INTEGER },
+			rif: { type: STRING },
+			email: { type: STRING },
+			phone_1: { type: STRING },
+			phone_2: { type: STRING },
+			whatsapp: { type: STRING },
+			instagram: { type: STRING },
+			direction: { type: STRING },
 		},
 		{ freezeTableName: true, timestamps: false },
 	);

@@ -5,9 +5,10 @@ module.exports = (sequelize, type) => {
 		'imgs',
 		{
 			id: { type: INTEGER, primaryKey: true, autoIncrement: true },
-			path: { type: STRING, unique: true },
+			note: { type: STRING, unique: true },
+			origin: { type: STRING },
 		},
-		{ freezeTableName: true, timestamps: false },
+		{ freezeTableName: true, timestamps: true },
 	);
 
 	return imgs;
