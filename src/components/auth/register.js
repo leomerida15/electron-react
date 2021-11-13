@@ -35,23 +35,6 @@ const Register = () => {
 
 	const fromData = [
 		{
-			type: 'text',
-			name: 'name',
-			label: 'Nombre',
-			rules: (value) => {
-				return {
-					required: true,
-				};
-			},
-			InputProps: {
-				startAdornment: (
-					<InputAdornment position='start'>
-						<AccountCircle />
-					</InputAdornment>
-				),
-			},
-		},
-		{
 			type: 'email',
 			name: 'email',
 			label: 'Correo',

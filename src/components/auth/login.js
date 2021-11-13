@@ -3,6 +3,7 @@ import * as yup from 'yup';
 import { InputAdornment } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import EmailIcon from '@mui/icons-material/Email';
+import Api from '../../hook/Api';
 
 const schema = yup
 	.object({
@@ -13,9 +14,13 @@ const schema = yup
 
 const Login = () => {
 	const Action = async (body) => {
-		try {
-			console.log('body Form', body);
-		} catch (err) {}
+		// try {
+		console.log('body Form', body);
+
+		const resp = await Api('Auth', 'login');
+
+		console.log('resp', resp);
+		// } catch (err) {}
 	};
 
 	const fromData = [

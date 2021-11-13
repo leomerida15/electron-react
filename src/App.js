@@ -3,6 +3,9 @@ import Card from './components/card';
 import { styled, ThemeProvider } from '@mui/styles';
 import { createTheme } from '@mui/material/styles';
 import Home from './pages/Home';
+import Router from './router/index';
+
+import './index.css';
 
 // const fs = window.require('fs');
 // const pathModule = window.require('path');
@@ -24,7 +27,7 @@ function App() {
 			<ThemeProvider theme={theme}>
 				<MyThemeComponent>
 					<h1>{path}</h1>
-					<Home />
+					<Router />
 				</MyThemeComponent>
 			</ThemeProvider>
 		</div>

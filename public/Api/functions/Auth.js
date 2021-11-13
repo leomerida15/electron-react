@@ -16,7 +16,7 @@ Auth.register = async (data) => {
 
 Auth.login = async (data) => {
 	try {
-		return 'hola soy login';
+		if (!data) throw { message: 'la data es requerida' };
 		// define data
 		const { email, password } = data.body;
 
@@ -28,14 +28,12 @@ Auth.login = async (data) => {
 		const valid_password = await bcrypt.compare(password, user.password);
 		if (!valid_password) throw { message: `El password no coinside` };
 
-		// filter respues
-
 		// token
 		const token = jwt.sign({ id: user.id, email: user.email }, 'secret');
 
-		return { message: 'usuario logeado', info: user, token };
+		return { message: 'usuario logeado', info: user, token, status: true };
 	} catch (err) {
-		return err;
+		return { err, status: false };
 	}
 };
 

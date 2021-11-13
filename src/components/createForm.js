@@ -137,9 +137,11 @@ const createForm = ({ fromInput, Action, schema, sx, conten, ButtonClass, button
 				return ({ field: { onChange, value } }) => {
 					const { name, label } = input;
 
+					// alert('label', label);
+
 					if (input.value) value = input.value;
 
-					const [values, setValues] = react.useMemouseState({ password: value, showPassword: false });
+					const [values, setValues] = react.useState({ password: value, showPassword: false });
 
 					const handleChange = (prop) => (event) => {
 						setValues({ ...values, [prop]: event.target.value });
@@ -157,7 +159,7 @@ const createForm = ({ fromInput, Action, schema, sx, conten, ButtonClass, button
 
 					return (
 						<FormControl sx={{ m: 1 }} variant='outlined' error={!!errors[name]}>
-							<InputLabel htmlFor='outlined-adornment-password'>Password</InputLabel>
+							<InputLabel htmlFor='outlined-adornment-password'>{label}</InputLabel>
 							<OutlinedInput
 								id='outlined-adornment-password'
 								type={values.showPassword ? 'text' : 'password'}
