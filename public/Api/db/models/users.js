@@ -8,7 +8,7 @@ module.exports = (sequelize, type) => {
 			email: { type: STRING, unique: true },
 			password: { type: STRING },
 			id_rol: { type: INTEGER },
-			active: { type: BOOLEAN },
+			active: { type: BOOLEAN, defaultValue: true },
 		},
 		{ freezeTableName: true, timestamps: false },
 	);
