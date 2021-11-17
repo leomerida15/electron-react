@@ -7,8 +7,6 @@ module.exports = (sequelize, type) => {
 			id: { type: INTEGER, primaryKey: true, autoIncrement: true },
 			id_user: { type: INTEGER },
 			name: { type: STRING(45) },
-			path: { type: STRING(250) },
-			id_public: { type: STRING(45) },
 		},
 		{ freezeTableName: true, timestamps: false },
 	);

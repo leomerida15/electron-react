@@ -8,11 +8,11 @@ const Routes = () => (
 	<BrowserRouter>
 		<GuardProvider guards={[Auth]}>
 			<Switch>
-				{routes.map(({ path, component, meta }) => {
-					return <GuardedRoute path={path} exact component={component} meta={meta} />;
+				{routes.map(({ path, component, meta }, i) => {
+					return <GuardedRoute key={i} path={path} exact component={component} meta={meta} />;
 				})}
 				{/*  */}
-				<GuardedRoute path='*' meta={{ auth: true }} />
+				{/* <GuardedRoute path='*' meta={{ auth: true }} /> */}
 			</Switch>
 		</GuardProvider>
 	</BrowserRouter>

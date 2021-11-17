@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import Auth from '../../components/auth';
+import Auth from '../../components/auth/index';
 import { Link, useLocation } from 'react-router-dom';
 
 const Home = () => {

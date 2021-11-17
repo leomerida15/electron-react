@@ -14,6 +14,7 @@ const sales_products = require('./sales_products');
 //
 const vendors = require('./vendors');
 const notes = require('./notes');
+//
 
 module.exports = (Sequelize, DataTypes) => {
 	return {

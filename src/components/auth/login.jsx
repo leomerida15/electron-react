@@ -4,6 +4,7 @@ import { InputAdornment } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import EmailIcon from '@mui/icons-material/Email';
 import Api from '../../hook/Api';
+import { useHistory } from 'react-router';
 
 const schema = yup
 	.object({
@@ -13,14 +14,35 @@ const schema = yup
 	.required();
 
 const Login = () => {
+	const History = useHistory();
 	const Action = async (body) => {
-		// try {
-		console.log('body Form', body);
+		try {
+			// console.log('body Form', body);
 
-		const resp = await Api('Auth', 'login');
+			const resp = await Api('Auth', 'login', body);
+			if (!resp.status) throw new Error('Error');
 
-		console.log('resp', resp);
-		// } catch (err) {}
+			// console.log('resp', resp);
+			const tokensJSON = localStorage.getItem('tokens') || `[]`;
+			console.log('tokensJSON', tokensJSON);
+
+			const tokensJS = JSON.parse(tokensJSON);
+
+			console.log('tokensJS', tokensJS);
+
+			tokensJS.push(resp.token);
+
+			const tokensSTIRNG = JSON.stringify(tokensJS);
+
+			console.log('tokensSTIRNG', tokensSTIRNG);
+
+			localStorage.setItem('token', tokensSTIRNG);
+
+			History.push('/dash');
+		} catch (err) {
+			console.error('err');
+			console.log('err', err);
+		}
 	};
 
 	const fromData = [

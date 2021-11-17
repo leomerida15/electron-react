@@ -1,8 +1,5 @@
-import { useState } from 'react';
-import Card from './components/card';
 import { styled, ThemeProvider } from '@mui/styles';
 import { createTheme } from '@mui/material/styles';
-import Home from './pages/Home';
 import Router from './router/index';
 
 import './index.css';
@@ -19,14 +16,14 @@ const MyThemeComponent = styled('div')(({ theme }) => ({
 const theme = createTheme();
 
 function App() {
-	const [path, setPath] = useState(app.getAppPath());
+	// const [path, setPath] = useState(app.getAppPath());
 	// const [hola, setHola] = useState(remote.require('./functions').hola());
 
 	return (
 		<div>
 			<ThemeProvider theme={theme}>
 				<MyThemeComponent>
-					<h1>{path}</h1>
+					{/* <h1>{localStorage.getItem('token')}</h1> */}
 					<Router />
 				</MyThemeComponent>
 			</ThemeProvider>

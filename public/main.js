@@ -5,14 +5,14 @@ const isDev = require('electron-is-dev');
 
 require('@electron/remote/main').initialize();
 // db
-require('./db/');
-require('./functions');
+require('./Api/db/index');
+require('./Api/functions');
 
 function createWindow() {
 	// Create the browser window.
 	const win = new BrowserWindow({
-		width: 800,
-		height: 600,
+		width: 1400,
+		height: 800,
 		webPreferences: {
 			nodeIntegration: true,
 			enableRemoteModule: true,

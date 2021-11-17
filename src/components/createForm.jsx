@@ -18,7 +18,7 @@ import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
 import react from 'react';
 
-const createForm = ({ fromInput, Action, schema, sx, conten, ButtonClass, buttonText }) => {
+const createForm = ({ fromInput, Action, schema, sx, conten, ButtonClass, buttonText, title, offButton }) => {
 	const {
 		control,
 		handleSubmit,
@@ -40,7 +40,7 @@ const createForm = ({ fromInput, Action, schema, sx, conten, ButtonClass, button
 		switch (input.type) {
 			case 'select':
 				return ({ field: { onChange, value } }) => {
-					const { currencies, name, label } = input;
+					const { currencies, name, label, InputProps } = input;
 					if (input.value) value = input.value;
 
 					return (
@@ -50,6 +50,7 @@ const createForm = ({ fromInput, Action, schema, sx, conten, ButtonClass, button
 							label={label}
 							onChange={onChange}
 							error={!!errors[name]}
+							InputProps={InputProps ? InputProps : {}}
 							helperText={errors[name] && errors[name].message}>
 							{currencies.map((option) => (
 								<MenuItem key={option.value} value={option.value}>
@@ -61,7 +62,7 @@ const createForm = ({ fromInput, Action, schema, sx, conten, ButtonClass, button
 				};
 			case 'select-multiple':
 				return ({ field: { onChange, value } }) => {
-					const { currencies, name, label } = input;
+					const { currencies, name, label, InputProps } = input;
 					if (input.value) value = input.value;
 					const [personName, setPersonName] = react.useState([]);
 
@@ -86,6 +87,7 @@ const createForm = ({ fromInput, Action, schema, sx, conten, ButtonClass, button
 								multiple
 								value={personName}
 								onChange={handleChange}
+								InputProps={InputProps ? InputProps : {}}
 								input={<OutlinedInput label={label} />}
 								renderValue={(selected) => selected.join(', ')}
 								MenuProps={currencies}
@@ -109,11 +111,67 @@ const createForm = ({ fromInput, Action, schema, sx, conten, ButtonClass, button
 					return (
 						<TextField
 							onChange={onChange}
+							InputProps={InputProps ? InputProps : {}}
 							value={value}
 							label={label}
 							error={!!errors[name]}
 							helperText={errors[name] && errors[name].message}
-							InputProps={InputProps ? InputProps : ''}
+						/>
+					);
+				};
+			case 'number':
+				return ({ field: { onChange, value } }) => {
+					const { name, InputProps, label } = input;
+
+					if (input.value) value = input.value;
+
+					return (
+						<TextField
+							onChange={onChange}
+							InputProps={InputProps ? InputProps : {}}
+							value={value}
+							type='number'
+							label={label}
+							error={!!errors[name]}
+							helperText={errors[name] && errors[name].message}
+						/>
+					);
+				};
+			case 'coin':
+				return ({ field: { onChange, value } }) => {
+					const { name, InputProps, label } = input;
+
+					if (input.value) value = input.value;
+
+					return (
+						<TextField
+							onChange={onChange}
+							InputProps={InputProps ? InputProps : {}}
+							value={value}
+							type='number'
+							label={label}
+							error={!!errors[name]}
+							helperText={errors[name] && errors[name].message}
+						/>
+					);
+				};
+			case 'multi-line':
+				return ({ field: { onChange, value } }) => {
+					const { name, InputProps, label, rows } = input;
+
+					if (input.value) value = input.value;
+
+					return (
+						<TextField
+							onChange={onChange}
+							InputProps={InputProps ? InputProps : {}}
+							value={value}
+							type='number'
+							multiline
+							rows={rows ? rows : 4}
+							label={label}
+							error={!!errors[name]}
+							helperText={errors[name] && errors[name].message}
 						/>
 					);
 				};
@@ -124,18 +182,18 @@ const createForm = ({ fromInput, Action, schema, sx, conten, ButtonClass, button
 					return (
 						<TextField
 							onChange={onChange}
+							InputProps={InputProps ? InputProps : {}}
 							value={value}
 							label={label}
 							type='email'
 							error={!!errors[name]}
 							helperText={errors[name] && errors[name].message}
-							InputProps={InputProps ? InputProps : ''}
 						/>
 					);
 				};
 			case 'password-see':
 				return ({ field: { onChange, value } }) => {
-					const { name, label } = input;
+					const { name, label, InputProps } = input;
 
 					// alert('label', label);
 
@@ -165,6 +223,7 @@ const createForm = ({ fromInput, Action, schema, sx, conten, ButtonClass, button
 								type={values.showPassword ? 'text' : 'password'}
 								value={values.password}
 								onChange={handleChange('password')}
+								InputProps={InputProps ? InputProps : {}}
 								endAdornment={
 									<InputAdornment position='end'>
 										<IconButton
@@ -189,13 +248,13 @@ const createForm = ({ fromInput, Action, schema, sx, conten, ButtonClass, button
 
 					return (
 						<TextField
+							InputProps={InputProps ? InputProps : {}}
 							onChange={onChange}
 							value={value}
 							label={label}
 							type='password'
 							error={!!errors[name]}
 							helperText={errors[name] && errors[name].message}
-							InputProps={InputProps ? InputProps : ''}
 						/>
 					);
 				};
@@ -212,10 +271,18 @@ const createForm = ({ fromInput, Action, schema, sx, conten, ButtonClass, button
 							'& > :not(style)': { m: 1 },
 					  }
 			}
-			className={conten ? conten : 'ed-grid'}
 			noValidate
+			className={conten ? conten : 'ed-grid'}
 			autoComplete='off'
 			onSubmit={onSubmit}>
+			{title ? (
+				<div className='s-center'>
+					<h1> {title} </h1>
+				</div>
+			) : (
+				''
+			)}
+
 			{/*  */}
 			{fromInput.map((item, i) => {
 				const { name, rules } = item;
@@ -230,9 +297,18 @@ const createForm = ({ fromInput, Action, schema, sx, conten, ButtonClass, button
 				);
 			})}
 
-			<Button onClick={handleSubmit(onSubmit)} className={ButtonClass ? ButtonClass : ''} variant={'contained'}>
-				{buttonText ? buttonText : 'Submit'}
-			</Button>
+			{offButton ? (
+				<br />
+			) : (
+				<div className='s-center'>
+					<Button
+						onClick={handleSubmit(onSubmit)}
+						className={ButtonClass ? ButtonClass : ''}
+						variant={'contained'}>
+						{buttonText ? buttonText : 'Submit'}
+					</Button>{' '}
+				</div>
+			)}
 		</Box>
 	);
 };
@@ -245,6 +321,8 @@ createForm.propTypes = {
 	buttonText: PropTypes.string,
 	conten: PropTypes.string,
 	ButtonClass: PropTypes.string,
+	title: PropTypes.string,
+	offButton: PropTypes.bool,
 };
 
 export default createForm;

@@ -1,42 +1,39 @@
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
-const Alert = withReactContent(Swal);
-
-Alert.mixin({
-	toast: true,
-	position: 'top-end',
-	showConfirmButton: false,
-	timer: 3000,
-	timerProgressBar: true,
-	didOpen: (toast) => {
-		toast.addEventListener('mouseenter', Swal.stopTimer);
-		toast.addEventListener('mouseleave', Swal.resumeTimer);
-	},
-});
+import Alert from './Alert';
 
 const { app, ...remote } = window.require('@electron/remote');
 
-const Api = async (rout, func, body) => {
+const Api = async (rout, func, body, offAlert) => {
 	try {
-		const data = {
-			headers: { rout, func, token: localStorage.getItem('token') },
-			body,
-		};
+		console.log(rout, func, body);
 
-		const resp = body
-			? await remote.require(`./functions/${rout}.js`)[func](data)
-			: await remote.require(`./functions/${rout}.js`)[func]();
+		const token = localStorage.getItem('token') ? JSON.parse(localStorage.getItem('token'))[0] : '';
+		const data = { headers: { rout, func, token }, body };
+
+		// console.log('route', `./Api/functions/${rout}.js`);
+
+		const resp = await (async () => {
+			if (body) {
+				const action = remote.require(`./Api/functions/${rout}.js`);
+				return action[func](data);
+			} else {
+				const action = remote.require(`./Api/functions/${rout}.js`);
+				return action[func](data);
+			}
+		})();
 
 		console.log('resp', resp);
 		if (!resp.status) throw resp.err;
 
-		Alert.fire({ icon: 'success', title: resp.message });
+		if (offAlert) Alert.fire({ icon: 'success', title: resp.message });
 
 		return resp;
 	} catch (err) {
-		Alert.fire({ icon: 'error', title: err.message });
+		if (offAlert) Alert.fire({ icon: 'error', title: err.message });
 
-		return err;
+		console.log('rout, func', rout, func);
+		console.log('err', err);
+
+		return { icon: 'error', title: err.message };
 	}
 };
 

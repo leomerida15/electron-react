@@ -11,6 +11,7 @@ const Private = [
 		component: Home,
 		meta: { auth: false },
 	},
+	// { path: '*', component: Home, meta: { auth: true } },
 ];
 
 export default Private;

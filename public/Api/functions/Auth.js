@@ -1,16 +1,39 @@
 /* eslint-disable no-throw-literal */
 const { Users } = require('../db');
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const valid = require('validator');
+// const { Op } = require('sequelize');
+const JWT = require('../hooks/token');
+
 const Auth = {};
 
 Auth.register = async (data) => {
 	try {
-		await Users.create(data);
+		console.log('data', data);
 
-		return { msg: 'registro ok' };
+		// return data;
+		if (!data) throw { message: 'la data es requerida' };
+
+		const { email, password, name } = data.body;
+
+		if (!valid.isEmail(email)) throw { message: 'El email no es valido' };
+
+		//
+		if (!valid.isStrongPassword(password, { minLength: 6, minNumbers: 1, minLowercase: 1 })) {
+			throw { message: 'El password no es valido' };
+		}
+
+		// ecript password with bcrypt
+		data.body.password = await bcrypt.hash(password, 10);
+		data.body.id_rol = 1;
+
+		const info = await Users.create(data.body);
+
+		// return data;
+
+		return { message: 'registro ok', info, status: true };
 	} catch (err) {
-		return err;
+		return { err, status: false };
 	}
 };
 
@@ -29,9 +52,10 @@ Auth.login = async (data) => {
 		if (!valid_password) throw { message: `El password no coinside` };
 
 		// token
-		const token = jwt.sign({ id: user.id, email: user.email }, 'secret');
+		console.log({ id_user: user.id, email: user.email });
+		const token = JWT.create({ id_user: user.id, email: user.email });
 
-		return { message: 'usuario logeado', info: user, token, status: true };
+		return { message: 'usuario logeado', token, status: true };
 	} catch (err) {
 		return { err, status: false };
 	}

@@ -1,21 +1,21 @@
 import CreateForm from '../createForm';
 import * as yup from 'yup';
 import { InputAdornment } from '@mui/material';
-import AccountCircle from '@mui/icons-material/AccountCircle';
 import LockIcon from '@mui/icons-material/Lock';
 import EmailIcon from '@mui/icons-material/Email';
-import axios from 'axios';
+import Api from '../../hook/Api';
+import { useHistory } from 'react-router';
 
 const schema = yup
 	.object({
-		name: yup.string().required(),
-		email: yup.string().required(),
+		email: yup.string().email().required(),
 		password: yup.string().required(),
 		confirPass: yup.string().required(),
 	})
 	.required();
 
 const Register = () => {
+	const History = useHistory();
 	const Action = async (body) => {
 		try {
 			const { password, confirPass } = body;
@@ -29,8 +29,12 @@ const Register = () => {
 				};
 			}
 
-			await axios.post('/auth/register', body);
-		} catch (err) {}
+			await Api('Auth', 'register', body);
+
+			History.push('/');
+		} catch (err) {
+			console.log('err', err);
+		}
 	};
 
 	const fromData = [

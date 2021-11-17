@@ -1,6 +1,6 @@
-// import Privates from './privates';
+import Privates from './privates';
 import Publics from './publics';
 
-const Routes = [...Publics];
+const Routes = [...Publics, ...Privates];
 
 export default Routes;

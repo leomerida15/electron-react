@@ -6,11 +6,11 @@ module.exports = (sequelize, type) => {
 		{
 			id: { type: INTEGER, primaryKey: true, autoIncrement: true },
 			id_user: { type: INTEGER },
+			id_category: { type: INTEGER },
+			id_vendor: { type: INTEGER },
 			name: { type: STRING(80) },
 			price: { type: INTEGER },
-			desc: { type: STRING(80) },
-			path: { type: STRING(250) },
-			id_public: { type: STRING(45) },
+			description: { type: STRING },
 		},
 		{ freezeTableName: true, timestamps: false },
 	);

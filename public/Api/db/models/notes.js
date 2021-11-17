@@ -5,7 +5,7 @@ module.exports = (sequelize, type) => {
 		'imgs',
 		{
 			id: { type: INTEGER, primaryKey: true, autoIncrement: true },
-			note: { type: STRING, unique: true },
+			note: { type: STRING },
 			origin: { type: STRING },
 		},
 		{ freezeTableName: true, timestamps: true },
