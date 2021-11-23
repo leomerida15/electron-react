@@ -29,21 +29,6 @@ const Register = () => {
 
 	const fromData = [
 		{
-			type: 'file',
-			name: 'image',
-			label: 'Repetir Contraseña',
-			rules: (value) => ({
-				required: true,
-			}),
-			InputProps: {
-				startAdornment: (
-					<InputAdornment position='start'>
-						<LockIcon />
-					</InputAdornment>
-				),
-			},
-		},
-		{
 			type: 'email',
 			name: 'email',
 			label: 'Correo',
@@ -71,6 +56,21 @@ const Register = () => {
 		{
 			type: 'password',
 			name: 'confirPass',
+			label: 'Repetir Contraseña',
+			rules: (value) => ({
+				required: true,
+			}),
+			InputProps: {
+				startAdornment: (
+					<InputAdornment position='start'>
+						<LockIcon />
+					</InputAdornment>
+				),
+			},
+		},
+		{
+			type: 'file',
+			name: 'image',
 			label: 'Repetir Contraseña',
 			rules: (value) => ({
 				required: true,

@@ -1,5 +1,5 @@
 /* eslint-disable no-throw-literal */
-const { Users } = require('../db');
+const { Users, Imgs, Imgs_Users } = require('../db');
 const bcrypt = require('bcrypt');
 const valid = require('validator');
 // const { Op } = require('sequelize');
@@ -27,7 +27,13 @@ Auth.register = async (data) => {
 		data.body.password = await bcrypt.hash(password, 10);
 		data.body.id_rol = 1;
 
-		const info = await Users.create(data.body);
+		const user = await Users.create(data.body);
+
+		const photo = await Imgs.create({ path: image });
+
+		Imgs_Users.create({ id_user: user.id, id_img: photo.id });
+
+		const info = await Users.findOne({ where: { id: user.id }, include: [{ model: Imgs_Users }] });
 
 		// return data;
 
@@ -56,6 +62,23 @@ Auth.login = async (data) => {
 		const token = JWT.create({ id_user: user.id, email: user.email });
 
 		return { message: 'usuario logeado', token, status: true };
+	} catch (err) {
+		return { err, status: false };
+	}
+};
+
+Auth.getUser = async (data) => {
+	try {
+		if (!data) throw { message: 'la data es requerida' };
+		// define data
+		const { email } = JWT.valid(data.headers.token);
+
+		// query SELECT
+		const info = await Users.findOne({ where: { email }, include: [{ model: Imgs_Users }] });
+
+		if (!info) throw { message: `Usuario no Registrado` };
+
+		return { message: 'usuario logeado', status: true };
 	} catch (err) {
 		return { err, status: false };
 	}
