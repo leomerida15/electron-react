@@ -14,7 +14,7 @@ Auth.register = async (data) => {
 		// return data;
 		if (!data) throw { message: 'la data es requerida' };
 
-		const { email, password, name } = data.body;
+		const { email, password, image } = data.body;
 
 		if (!valid.isEmail(email)) throw { message: 'El email no es valido' };
 

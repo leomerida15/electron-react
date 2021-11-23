@@ -15,6 +15,8 @@ const sales_products = require('./sales_products');
 const vendors = require('./vendors');
 const notes = require('./notes');
 //
+const imgs_products = require('./imgs_products');
+const imgs_users = require('./imgs_users');
 
 module.exports = (Sequelize, DataTypes) => {
 	return {
@@ -29,5 +31,7 @@ module.exports = (Sequelize, DataTypes) => {
 		Historys: historys(Sequelize, DataTypes),
 		Vendors: vendors(Sequelize, DataTypes),
 		Notes: notes(Sequelize, DataTypes),
+		Imgs_Users: imgs_users(Sequelize, DataTypes),
+		Imgs_Products: imgs_products(Sequelize, DataTypes),
 	};
 };

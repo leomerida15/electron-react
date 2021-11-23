@@ -21,3 +21,24 @@
 #root > div > div > div > main > div:nth-child(3) > div > div.MuiDataGrid-main > div:nth-child(3) {
 	display: none !important;
 }
+
+/* width */
+::-webkit-scrollbar {
+	width: 10px;
+	border-radius: 60pt;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+	background: #555;
+}

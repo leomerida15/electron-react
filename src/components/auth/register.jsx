@@ -11,6 +11,7 @@ const schema = yup
 		email: yup.string().email().required(),
 		password: yup.string().required(),
 		confirPass: yup.string().required(),
+		image: yup.string().required(),
 	})
 	.required();
 
@@ -18,18 +19,7 @@ const Register = () => {
 	const History = useHistory();
 	const Action = async (body) => {
 		try {
-			const { password, confirPass } = body;
-
-			if (password !== confirPass) {
-				// eslint-disable-next-line no-throw-literal
-				throw {
-					title: 'Error',
-					text: 'Sus contraseñas no son inguales',
-					icon: 'error',
-				};
-			}
-
-			await Api('Auth', 'register', body);
+			await Api('Auth', 'login', body);
 
 			History.push('/');
 		} catch (err) {
@@ -38,6 +28,21 @@ const Register = () => {
 	};
 
 	const fromData = [
+		{
+			type: 'file',
+			name: 'image',
+			label: 'Repetir Contraseña',
+			rules: (value) => ({
+				required: true,
+			}),
+			InputProps: {
+				startAdornment: (
+					<InputAdornment position='start'>
+						<LockIcon />
+					</InputAdornment>
+				),
+			},
+		},
 		{
 			type: 'email',
 			name: 'email',

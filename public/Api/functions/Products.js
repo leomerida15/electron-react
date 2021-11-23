@@ -12,14 +12,13 @@ product.ALL = async (data) => {
 
 		const resp = await Products.findAll({
 			order: [['id', 'ASC']],
-			include: [{ model: Categorys }],
+			include: [{ model: Categorys }, { model: Vendors }],
 		});
 
 		const info = resp.map(({ dataValues }) => {
-			console.log('item', dataValues);
-			const { id, name, description, price, category } = dataValues;
+			const { id, name, description, price, category, stock, vendor } = dataValues;
 
-			return { id, name, description, price, category: category.name };
+			return { id, name, description, price, category: category.name, vendor: vendor.name, stock };
 		});
 
 		Notes.CREATE({ note: `todos los productos solicitadas por ${email}`, origin: 'Products.ALL' });
@@ -36,11 +35,10 @@ product.CREATE = async (data) => {
 		console.log('token', data.headers.token);
 		const { id_user, email } = JWT.valid(data.headers.token);
 		console.log({ id_user, email });
-		const { name, description, price, id_category } = data.body;
 
-		console.log({ id_user, name, description, price, id_category });
+		console.log(data.body);
 
-		const info = await Products.create({ id_user, name, description, price, id_category });
+		const info = await Products.create(data.body);
 
 		Notes.CREATE({ note: `producto creado por ${email}`, origin: 'Products.CREATE' });
 		return { message: 'producto creado', info, status: true };

@@ -1,6 +1,11 @@
 //
 import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
+import { IMaskInput } from 'react-imask';
+import Card from '@mui/material/Card';
+import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
+import CardMedia from '@mui/material/CardMedia';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { useForm, Controller } from 'react-hook-form';
 import Button from '@mui/material/Button';
 import PropTypes from 'prop-types';
@@ -16,7 +21,8 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
-import react from 'react';
+import react, { useState, forwardRef } from 'react';
+import Upload from '../hook/Upload';
 
 const createForm = ({ fromInput, Action, schema, sx, conten, ButtonClass, buttonText, title, offButton }) => {
 	const {
@@ -258,6 +264,161 @@ const createForm = ({ fromInput, Action, schema, sx, conten, ButtonClass, button
 						/>
 					);
 				};
+
+			case 'phone':
+				return ({ field: { onChange, value } }) => {
+					const TextMaskCustom = forwardRef(function TextMaskCustom(props, ref) {
+						const { onChange, ...other } = props;
+						return (
+							<IMaskInput
+								{...other}
+								mask='+58 000-000-0000'
+								definitions={{
+									'#': /[1-9]/,
+								}}
+								inputRef={ref}
+								onAccept={(value) => onChange({ target: { name: props.name, value } })}
+								overwrite
+							/>
+						);
+					});
+
+					TextMaskCustom.propTypes = {
+						name: PropTypes.string.isRequired,
+						onChange: PropTypes.func.isRequired,
+					};
+
+					const [values, setValues] = react.useState({
+						textmask: '(100) 000-0000',
+						numberformat: '1320',
+					});
+
+					const handleChange = (event) => {
+						setValues({
+							...values,
+							[event.target.name]: event.target.value,
+						});
+					};
+
+					return (
+						<Box
+							sx={{
+								'& > :not(style)': {
+									m: 1,
+								},
+							}}>
+							<FormControl variant='standard'>
+								<InputLabel htmlFor='formatted-text-mask-input'>react-imask</InputLabel>
+								<Input
+									value={values.textmask}
+									onChange={handleChange}
+									name='textmask'
+									id='formatted-text-mask-input'
+									inputComponent={TextMaskCustom}
+								/>
+							</FormControl>
+						</Box>
+					);
+				};
+
+			case 'file':
+				return ({ field: { onChange, value } }) => {
+					const { name, label } = input;
+
+					if (input.value) value = input.value;
+
+					const [select, setSelect] = react.useState(value);
+
+					const handleCapture = (e) => {
+						const { path } = e.target.files[0];
+
+						const src = Upload('inputPath', path);
+						setSelect(src);
+
+						onChange({ target: { name, value: src } });
+					};
+
+					return (
+						<div>
+							<div className='ed-grid'>
+								<Button variant='contained' component='label'>
+									<AttachFileIcon />
+									Foto
+									<input onChange={handleCapture} hidden label={label} type='file' />
+								</Button>
+							</div>
+							<TextField
+								hidden
+								id={name}
+								value={select}
+								type='text'
+								error={!!errors[name]}
+								helperText={errors[name] && errors[name].message}
+							/>
+
+							<br />
+							<Card>
+								{select ? (
+									<CardMedia sx={{ maxWidth: 300 }} component='img' image={select} alt='Paella dish' />
+								) : (
+									<InsertPhotoIcon sx={{ fontSize: 200 }} />
+								)}
+							</Card>
+						</div>
+					);
+				};
+
+			case 'files':
+				return ({ field: { onChange, value } }) => {
+					const { name, label } = input;
+
+					if (input.value) value = input.value;
+
+					const [select, setSelect] = react.useState(value);
+
+					const handleCapture = (e) => {
+						const paths = e.target.files.map((file) => file.path);
+
+						const src = Upload('inputPaths', paths);
+						setSelect(src);
+
+						onChange({ target: { name, value: src } });
+					};
+
+					return (
+						<div className='ed-grid'>
+							<Button variant='contained' component='label'>
+								<AttachFileIcon />
+								Foto
+								<input onChange={handleCapture} hidden label={label} type='file' />
+							</Button>
+
+							<br />
+							<TextField
+								id={name}
+								value={select}
+								type='text'
+								error={!!errors[name]}
+								helperText={errors[name] && errors[name].message}
+							/>
+
+							<br />
+							{select ? (
+								<div className='ed-grid m-grid-2'>
+									{select.map((item) => (
+										<Card>
+											<CardMedia sx={{ maxWidth: 300 }} component='img' image={item} alt='Paella dish' />
+										</Card>
+									))}
+								</div>
+							) : (
+								<Card>
+									<InsertPhotoIcon sx={{ fontSize: 200 }} />
+								</Card>
+							)}
+						</div>
+					);
+				};
 		}
 	};
 
@@ -276,9 +437,17 @@ const createForm = ({ fromInput, Action, schema, sx, conten, ButtonClass, button
 			autoComplete='off'
 			onSubmit={onSubmit}>
 			{title ? (
-				<div className='s-center'>
-					<h1> {title} </h1>
-				</div>
+				typeof title === 'string' ? (
+					<div className='s-center'>
+						<h1> {title} </h1>
+					</div>
+				) : typeof title === 'object' ? (
+					<div className={title.class}>
+						<h1> {title.text} </h1>
+					</div>
+				) : (
+					''
+				)
 			) : (
 				''
 			)}
@@ -300,11 +469,8 @@ const createForm = ({ fromInput, Action, schema, sx, conten, ButtonClass, button
 			{offButton ? (
 				<br />
 			) : (
-				<div className='s-center'>
-					<Button
-						onClick={handleSubmit(onSubmit)}
-						className={ButtonClass ? ButtonClass : ''}
-						variant={'contained'}>
+				<div className={ButtonClass ? ButtonClass : 's-center'}>
+					<Button onClick={handleSubmit(onSubmit)} variant={'contained'}>
 						{buttonText ? buttonText : 'Submit'}
 					</Button>{' '}
 				</div>

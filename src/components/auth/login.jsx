@@ -24,17 +24,12 @@ const Login = () => {
 
 			// console.log('resp', resp);
 			const tokensJSON = localStorage.getItem('tokens') || `[]`;
-			console.log('tokensJSON', tokensJSON);
 
 			const tokensJS = JSON.parse(tokensJSON);
-
-			console.log('tokensJS', tokensJS);
 
 			tokensJS.push(resp.token);
 
 			const tokensSTIRNG = JSON.stringify(tokensJS);
-
-			console.log('tokensSTIRNG', tokensSTIRNG);
 
 			localStorage.setItem('token', tokensSTIRNG);
 

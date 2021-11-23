@@ -12,8 +12,6 @@ import CreateTable from '../../components/createTable';
 import Alert from '../../hook/Alert';
 import StoreIcon from '@mui/icons-material/Store';
 
-import '../../index.css';
-
 import Api from '../../hook/Api';
 // const drawerWidth = 240;
 
@@ -31,6 +29,7 @@ const schema = yup
 		name: yup.string().required(),
 		price: yup.number().required(),
 		id_category: yup.number().required(),
+		id_vendor: yup.number().required(),
 		description: yup.string(),
 	})
 	.required();
@@ -39,7 +38,9 @@ const schemaEdit = yup
 	.object({
 		name: yup.string(),
 		price: yup.number().required(),
+		stock: yup.number().required(),
 		id_category: yup.number().required(),
+		id_vendor: yup.number().required(),
 		description: yup.string(),
 	})
 	.required();
@@ -54,15 +55,22 @@ const Products = () => {
 	const [openCreate, setOpenCreate] = useState(pathname === '/category/create');
 
 	const [currencies, setCurrencies] = useState([]);
+	const [currenciesVendors, setCurrenciesVendors] = useState([]);
 
 	const Refresh_Rows = async (offAlert) => {
 		const resp = await Api('Products', 'ALL');
+		console.log('resp.info', resp.info);
 		setRows(resp.info);
 	};
 
 	const getCategorys = async (offAlert) => {
 		const resp = await Api('Categorys', 'ALL');
 		const data = resp.info.map(({ id, name }) => ({ label: name, value: id }));
+
+		const respVendors = await Api('Vendors', 'ALL');
+		const dataVendors = respVendors.info.map(({ id, name }) => ({ label: name, value: id }));
+
+		setCurrenciesVendors(dataVendors);
 		setCurrencies(data);
 	};
 
@@ -109,7 +117,17 @@ const Products = () => {
 			rules: (value) => ({ required: true }),
 			InputProps: {
 				startAdornment: <InputAdornment position='start'>$</InputAdornment>,
-				inputProps: { min: 0, max: 10 },
+				inputProps: { min: 0 },
+			},
+		},
+		{
+			type: 'number',
+			name: 'stock',
+			label: 'Existencia',
+			rules: (value) => ({ required: true }),
+			InputProps: {
+				startAdornment: <InputAdornment position='start'>N</InputAdornment>,
+				inputProps: { min: 0 },
 			},
 		},
 		{
@@ -118,6 +136,13 @@ const Products = () => {
 			label: 'Categoria',
 			rules: (value) => ({ required: true }),
 			currencies,
+		},
+		{
+			type: 'select',
+			name: 'id_vendor',
+			label: 'Proveedor',
+			rules: (value) => ({ required: true }),
+			currencies: currenciesVendors,
 		},
 		{
 			type: 'multi-line',
@@ -152,6 +177,12 @@ const Products = () => {
 			width: 150,
 			sortable: true,
 		},
+		{
+			field: 'stock',
+			headerName: 'Existencia',
+			width: 150,
+			sortable: true,
+		},
 	];
 
 	const [fromDataEdit] = useState([
@@ -175,21 +206,30 @@ const Products = () => {
 			rules: (value) => ({ required: true }),
 			InputProps: {
 				startAdornment: <InputAdornment position='start'>$</InputAdornment>,
-				inputProps: { min: 0, max: 10 },
+				inputProps: { min: 0 },
+			},
+		},
+		{
+			type: 'number',
+			name: 'stock',
+			label: 'Existencia',
+			rules: (value) => ({ required: true }),
+			InputProps: {
+				startAdornment: <InputAdornment position='start'>N</InputAdornment>,
+				inputProps: { min: 0 },
 			},
 		},
 		{
 			type: 'text',
-			name: 'id_category',
-			label: 'Nombre',
+			name: 'category',
+			label: 'Categoria',
 			rules: (value) => ({ required: true }),
-			InputProps: {
-				startAdornment: (
-					<InputAdornment position='start'>
-						<StoreIcon />
-					</InputAdornment>
-				),
-			},
+		},
+		{
+			type: 'text',
+			name: 'vendor',
+			label: 'Proveedor',
+			rules: (value) => ({ required: true }),
 		},
 		{
 			type: 'multi-line',
@@ -239,25 +279,29 @@ const Products = () => {
 
 	const actions = {
 		async edit(api) {
-			console.log('edit', api.row.id_category);
+			// console.log('edit', api.row.id_category);
 
-			const { name, price, id_category, description } = api.row;
+			// const { name, price, id_category, description } = api.row;
 
-			const category = currencies.find(({ value }) => value === id_category);
+			console.log('api.row', api.row);
 
-			fromDataEdit[0].value = name;
-			fromDataEdit[1].value = price;
-			fromDataEdit[2].value = category.label;
-			fromDataEdit[3].value = description;
+			Object.keys(api.row).forEach((key) => {
+				console.log('key', key);
 
-			setEditData(api.row);
+				const i = fromDataEdit.findIndex(({ name }) => name === key);
+				console.log('i', i);
+
+				if (i !== -1) fromDataEdit[i].value = api.row[key];
+			});
+
+			// setEditData(api.row);
 
 			setOpenEdit(true);
 		},
 		async remove(api) {
 			const { id, name } = api.row;
 			const result = await Alert.fire({
-				title: `Desea eliminar la categoria ${api.row.name}`,
+				title: `Desea eliminar el producto ${api.row.name}`,
 				showDenyButton: true,
 				showConfirmButton: true,
 				confirmButtonText: 'Si',
@@ -268,12 +312,10 @@ const Products = () => {
 			if (result.isConfirmed) {
 				await Api('Products', 'DELETE', { id });
 
-				Alert.fire(`Categoria ${name} eliminada`, '', 'success');
+				Alert.fire(`producto ${name} a sido eliminado`, '', 'success');
 
 				await Refresh_Rows();
 			}
-
-			console.log('api', api);
 		},
 	};
 
@@ -298,10 +340,9 @@ const Products = () => {
 				await Refresh_Rows();
 
 				Alert.fire(`Categoria ${name} a sido editada`, '', 'success');
-			}
-			setOpenEdit(false);
 
-			await Refresh_Rows();
+				setOpenEdit(false);
+			}
 		} catch (err) {
 			console.clear();
 			console.error(err);

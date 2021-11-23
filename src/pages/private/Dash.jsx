@@ -140,11 +140,13 @@ const Dash = () => {
 					<List>
 						{[
 							{ text: 'Casa', icon: <HomeIcon />, path: '/dash' },
+							{ text: 'Usuarios', icon: <LocalShippingIcon />, path: '/dash/users' },
+							{ text: 'Clientes', icon: <LocalShippingIcon />, path: '/dash/clients' },
 							{ text: 'Categorias', icon: <CategoryIcon />, path: '/dash/category' },
 							{ text: 'Productos', icon: <StoreIcon />, path: '/dash/products' },
 							{ text: 'Proveedores', icon: <LocalShippingIcon />, path: '/dash/vendors' },
 						].map(({ text, path, icon }, i) => (
-							<Link to={path}>
+							<Link to={path} key={i}>
 								<ListItem button key={text}>
 									<ListItemIcon>{icon}</ListItemIcon>
 									<ListItemText primary={text} />

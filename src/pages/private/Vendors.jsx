@@ -11,6 +11,8 @@ import CreateForm from '../../components/createForm';
 import CreateTable from '../../components/createTable';
 import Alert from '../../hook/Alert';
 import StoreIcon from '@mui/icons-material/Store';
+import EmailIcon from '@mui/icons-material/Email';
+import PhoneIcon from '@mui/icons-material/Phone';
 
 import Api from '../../hook/Api';
 // const drawerWidth = 240;
@@ -26,23 +28,25 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 const schema = yup
 	.object({
-		name: yup.string().required(),
-		price: yup.number().required(),
-		id_category: yup.number().required(),
-		description: yup.string(),
+		name: yup.string(),
+		rif: yup.number(),
+		email: yup.string().email(),
+		phone: yup.string(),
+		direction: yup.string(),
 	})
 	.required();
 
 const schemaEdit = yup
 	.object({
 		name: yup.string(),
-		price: yup.number().required(),
-		id_category: yup.number().required(),
-		description: yup.string(),
+		rif: yup.string(),
+		email: yup.string().email(),
+		phone: yup.number(),
+		direction: yup.string(),
 	})
 	.required();
 
-const Products = () => {
+const Vendors = () => {
 	// const History = useHistory();
 
 	const [rows, setRows] = useState([]);
@@ -54,7 +58,7 @@ const Products = () => {
 	const [currencies, setCurrencies] = useState([]);
 
 	const Refresh_Rows = async (offAlert) => {
-		const resp = await Api('Products', 'ALL');
+		const resp = await Api('Vendors', 'ALL');
 		setRows(resp.info);
 	};
 
@@ -73,7 +77,7 @@ const Products = () => {
 
 	const Action = async (body) => {
 		try {
-			const resp = await Api('Products', 'CREATE', body);
+			const resp = await Api('Vendors', 'CREATE', body);
 
 			Alert.fire({ icon: 'success', title: resp.message });
 
@@ -102,26 +106,43 @@ const Products = () => {
 		},
 		{
 			type: 'number',
-			name: 'price',
-			label: 'Precio',
-			rules: (value) => ({ required: true }),
+			name: 'rif',
+			label: 'Rif',
 			InputProps: {
-				startAdornment: <InputAdornment position='start'>$</InputAdornment>,
-				inputProps: { min: 0, max: 10 },
+				startAdornment: <InputAdornment position='start'>J-</InputAdornment>,
+				inputProps: { min: 0 },
 			},
 		},
 		{
-			type: 'select',
-			name: 'id_category',
-			label: 'Categoria',
-			rules: (value) => ({ required: true }),
-			currencies,
+			type: 'email',
+			name: 'email',
+			label: 'Correo',
+			InputProps: {
+				startAdornment: (
+					<InputAdornment position='start'>
+						<EmailIcon />
+					</InputAdornment>
+				),
+				inputProps: { min: 0 },
+			},
+		},
+		{
+			type: 'number',
+			name: 'phone',
+			label: 'Telefono',
+			InputProps: {
+				startAdornment: (
+					<InputAdornment position='start'>
+						<PhoneIcon />
+					</InputAdornment>
+				),
+				inputProps: { min: 0 },
+			},
 		},
 		{
 			type: 'multi-line',
-			name: 'description',
-			label: 'Descriccion',
-			rules: (value) => ({ required: true }),
+			name: 'direction',
+			label: 'Direccion',
 		},
 	];
 
@@ -139,14 +160,26 @@ const Products = () => {
 			sortable: true,
 		},
 		{
-			field: 'description',
-			headerName: 'descriccion',
+			field: 'rif',
+			headerName: 'Rif',
 			width: 150,
 			sortable: true,
 		},
 		{
-			field: 'category',
-			headerName: 'Categoria',
+			field: 'email',
+			headerName: 'Correo',
+			width: 150,
+			sortable: true,
+		},
+		{
+			field: 'phone',
+			headerName: 'Telefono',
+			width: 150,
+			sortable: true,
+		},
+		{
+			field: 'direction',
+			headerName: 'Direccion',
 			width: 150,
 			sortable: true,
 		},
@@ -168,32 +201,43 @@ const Products = () => {
 		},
 		{
 			type: 'number',
-			name: 'price',
-			label: 'Precio',
-			rules: (value) => ({ required: true }),
+			name: 'rif',
+			label: 'Rif',
 			InputProps: {
-				startAdornment: <InputAdornment position='start'>$</InputAdornment>,
-				inputProps: { min: 0, max: 10 },
+				startAdornment: <InputAdornment position='start'>J-</InputAdornment>,
+				inputProps: { min: 0 },
 			},
 		},
 		{
 			type: 'text',
-			name: 'id_category',
-			label: 'Nombre',
-			rules: (value) => ({ required: true }),
+			name: 'email',
+			label: 'Correo',
 			InputProps: {
 				startAdornment: (
 					<InputAdornment position='start'>
-						<StoreIcon />
+						<EmailIcon />
 					</InputAdornment>
 				),
+				inputProps: { min: 0 },
+			},
+		},
+		{
+			type: 'number',
+			name: 'phone',
+			label: 'Telefono',
+			InputProps: {
+				startAdornment: (
+					<InputAdornment position='start'>
+						<PhoneIcon />
+					</InputAdornment>
+				),
+				inputProps: { min: 0 },
 			},
 		},
 		{
 			type: 'multi-line',
-			name: 'description',
-			label: 'Descriccion',
-			rules: (value) => ({ required: true }),
+			name: 'direction',
+			label: 'Direccion',
 		},
 	]);
 
@@ -202,6 +246,7 @@ const Products = () => {
 			type: 'text',
 			name: 'name',
 			label: 'Nombre',
+			rules: (value) => ({ required: true }),
 			InputProps: {
 				startAdornment: (
 					<InputAdornment position='start'>
@@ -212,23 +257,43 @@ const Products = () => {
 		},
 		{
 			type: 'number',
-			name: 'price',
-			label: 'Precio',
+			name: 'rif',
+			label: 'Rif',
 			InputProps: {
-				startAdornment: <InputAdornment position='start'>$</InputAdornment>,
-				inputProps: { min: 0, max: 10 },
+				startAdornment: <InputAdornment position='start'>J-</InputAdornment>,
+				inputProps: { min: 0 },
 			},
 		},
 		{
-			type: 'select',
-			name: 'id_category',
-			label: 'Categoria',
-			currencies,
+			type: 'email',
+			name: 'email',
+			label: 'Correo',
+			InputProps: {
+				startAdornment: (
+					<InputAdornment position='start'>
+						<EmailIcon />
+					</InputAdornment>
+				),
+				inputProps: { min: 0 },
+			},
+		},
+		{
+			type: 'number',
+			name: 'phone',
+			label: 'Telefono',
+			InputProps: {
+				startAdornment: (
+					<InputAdornment position='start'>
+						<PhoneIcon />
+					</InputAdornment>
+				),
+				inputProps: { min: 0 },
+			},
 		},
 		{
 			type: 'multi-line',
-			name: 'description',
-			label: 'Descriccion',
+			name: 'direction',
+			label: 'Direccion',
 		},
 	];
 
@@ -237,16 +302,16 @@ const Products = () => {
 
 	const actions = {
 		async edit(api) {
-			console.log('edit', api.row.id_category);
+			console.log('edit', api.row.dataValues);
 
-			const { name, price, id_category, description } = api.row;
+			Object.keys(api.row.dataValues).forEach((key) => {
+				console.log('key', key);
 
-			const category = currencies.find(({ value }) => value === id_category);
+				const i = fromDataEdit.findIndex(({ name }) => name === key);
+				console.log('i', i);
 
-			fromDataEdit[0].value = name;
-			fromDataEdit[1].value = price;
-			fromDataEdit[2].value = category.label;
-			fromDataEdit[3].value = description;
+				if (i !== -1) fromDataEdit[i].value = api.row[key];
+			});
 
 			setEditData(api.row);
 
@@ -264,7 +329,7 @@ const Products = () => {
 
 			/* Read more about isConfirmed, isDenied below */
 			if (result.isConfirmed) {
-				await Api('Products', 'DELETE', { id });
+				await Api('Vendors', 'DELETE', { id });
 
 				Alert.fire(`Categoria ${name} eliminada`, '', 'success');
 
@@ -282,7 +347,7 @@ const Products = () => {
 			const { id } = editData;
 
 			const result = await Alert.fire({
-				title: `Desea editar la categoria ${name}`,
+				title: `Desea editar la El proveedor ${id}`,
 				showDenyButton: true,
 				showConfirmButton: true,
 				confirmButtonText: `Si`,
@@ -291,15 +356,15 @@ const Products = () => {
 
 			/* Read more about isConfirmed, isDenied below */
 			if (result.isConfirmed) {
-				await Api('Products', 'EDIT', { id, name });
+				console.log('{ id, ...body }', { id, ...body });
+				await Api('Vendors', 'EDIT', { id, ...body });
 
 				await Refresh_Rows();
 
 				Alert.fire(`Categoria ${name} a sido editada`, '', 'success');
-			}
-			setOpenEdit(false);
 
-			await Refresh_Rows();
+				setOpenEdit(false);
+			}
 		} catch (err) {
 			console.clear();
 			console.error(err);
@@ -341,4 +406,4 @@ const Products = () => {
 	);
 };
 
-export default Products;
+export default Vendors;

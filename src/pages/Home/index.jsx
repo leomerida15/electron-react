@@ -14,7 +14,7 @@ const Home = () => {
 				<Box>
 					<br />
 					<br />
-					<h1>{pathname}</h1>
+					{/* <h1>{pathname}</h1> */}
 					<br />
 					<Card variant='outlined'>
 						{' '}

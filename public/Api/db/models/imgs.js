@@ -6,8 +6,6 @@ module.exports = (sequelize, type) => {
 		{
 			id: { type: INTEGER, primaryKey: true, autoIncrement: true },
 			path: { type: STRING, unique: true },
-			id_relation: { type: INTEGER },
-			origin: { type: STRING },
 		},
 		{ freezeTableName: true, timestamps: false },
 	);

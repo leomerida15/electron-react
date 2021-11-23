@@ -1,27 +1,22 @@
 module.exports = (sequelize, type) => {
-	const { INTEGER, STRING } = type;
+	const { INTEGER, STRING, JSON } = type;
 
 	const historys = sequelize.define(
 		'historys',
 		{
 			id: { type: INTEGER, primaryKey: true, autoIncrement: true },
 			id_client: { type: INTEGER },
-			id_user: { type: STRING },
+			id_user: { type: INTEGER },
 			//
-			esferea_oi: { type: STRING },
-			esferea_od: { type: STRING },
+			esferea: { type: JSON, defaultValue: `{ oi:'', od:'' }` }, // { oi:'', od:'' }
 			//
-			eje_oi: { type: STRING },
-			eje_od: { type: STRING },
+			eje: { type: JSON, defaultValue: `{ oi:'', od:'' }` },
 			//
-			cilindro_oi: { type: STRING },
-			cilindro_od: { type: STRING },
+			cilindro: { type: JSON, defaultValue: `{ oi:'', od:'' }` },
 			//
-			add_oi: { type: STRING },
-			add_od: { type: STRING },
+			add: { type: JSON, defaultValue: `{ oi:'', od:'' }` },
 			//
-			dp_oi: { type: STRING },
-			dp_od: { type: STRING },
+			dp: { type: JSON, defaultValue: `{ oi:'', od:'' }` },
 			//
 			note: { type: STRING },
 		},

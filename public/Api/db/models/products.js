@@ -1,5 +1,5 @@
 module.exports = (sequelize, type) => {
-	const { INTEGER, STRING, BOOLEAN } = type;
+	const { INTEGER, STRING } = type;
 
 	const products = sequelize.define(
 		'products',
@@ -8,8 +8,9 @@ module.exports = (sequelize, type) => {
 			id_user: { type: INTEGER },
 			id_category: { type: INTEGER },
 			id_vendor: { type: INTEGER },
-			name: { type: STRING(80) },
+			name: { type: STRING },
 			price: { type: INTEGER },
+			stock: { type: INTEGER },
 			description: { type: STRING },
 		},
 		{ freezeTableName: true, timestamps: false },
