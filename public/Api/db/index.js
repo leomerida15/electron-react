@@ -8,16 +8,6 @@ const path = require('path');
 
 const storage = path.resolve('public/Api/db/sql/DB.sqlite');
 
-// if (process.env.npm_lifecycle_event.replace(/(DB:)/i, '') === 'refresh') {
-// 	console.log('storage', storage);
-// 	console.log('');
-// 	console.log('fs.existsSync(storage)', fs.existsSync(storage));
-// 	console.log('');
-// 	if (fs.existsSync(storage)) fs.unlinkSync(storage);
-// 	// fs.writeFileSync(storage, '');
-// }
-// // else if (!fs.existsSync(storage)) fs.writeFileSync(storage, '');
-
 const sequelize = new Sequelize({ dialect: 'sqlite', storage, logging: false });
 
 // inits

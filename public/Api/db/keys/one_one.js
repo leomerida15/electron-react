@@ -1,6 +1,9 @@
 module.exports = (model) => {
-	const { Imgs, Imgs_Users } = model;
+	const { Imgs, Users, Imgs_Products } = model;
 	// usuarios at Roles_has_usuarios
-	Imgs.hasOne(Imgs_Users, { foreignKey: 'id_img' });
-	Imgs_Users.belongsTo(Imgs, { foreignKey: 'id_img' });
+	Users.hasOne(Imgs, { foreignKey: 'id_img' });
+	Imgs.belongsTo(Users, { foreignKey: 'id_img' });
+	//
+	Imgs.hasOne(Imgs_Products, { foreignKey: 'id_img' });
+	Imgs_Products.belongsTo(Imgs_Products, { foreignKey: 'id_img' });
 };

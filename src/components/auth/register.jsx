@@ -19,7 +19,7 @@ const Register = () => {
 	const History = useHistory();
 	const Action = async (body) => {
 		try {
-			await Api('Auth', 'login', body);
+			await Api('Auth', 'register', body, true);
 
 			History.push('/');
 		} catch (err) {

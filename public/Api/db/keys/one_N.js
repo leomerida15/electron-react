@@ -1,12 +1,12 @@
 module.exports = (model) => {
-	const { Categorys, Products, Users, Rols, Sales_Products, Sales, Historys, Clients, Vendors, Imgs_Users } =
+	const { Categorys, Products, Users, Rols, Sales_Products, Sales, Historys, Clients, Vendors, Imgs_Products } =
 		model;
 	// usuarios at Roles_has_usuarios
 	Clients.hasMany(Sales, { foreignKey: 'id_client' });
 	Sales.belongsTo(Clients, { foreignKey: 'id_client' });
 	//
-	Users.hasOne(Imgs_Users, { foreignKey: 'id_user' });
-	Imgs_Users.belongsTo(Users, { foreignKey: 'id_user' });
+	Products.hasMany(Imgs_Products, { foreignKey: 'id_product' });
+	Imgs_Products.belongsTo(Products, { foreignKey: 'id_product' });
 	//
 	Users.hasMany(Sales, { foreignKey: 'id_user' });
 	Sales.belongsTo(Users, { foreignKey: 'id_user' });

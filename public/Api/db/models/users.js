@@ -7,6 +7,7 @@ module.exports = (sequelize, type) => {
 			id: { type: INTEGER, primaryKey: true, autoIncrement: true },
 			email: { type: STRING, unique: true },
 			password: { type: STRING },
+			id_img: { type: INTEGER },
 			id_rol: { type: INTEGER, defaultValue: 3 },
 			active: { type: BOOLEAN, defaultValue: true },
 		},
