@@ -1,15 +1,18 @@
-module.exports = (sequelize, type) => {
-	const { INTEGER, STRING } = type;
+const { EntitySchema } = require('typeorm');
 
-	const rols = sequelize.define(
-		'rols',
-		{
-			id: { type: INTEGER, primaryKey: true, autoIncrement: true },
-			name: { type: STRING, unique: true },
-			description: { type: STRING },
+module.exports = new EntitySchema({
+	name: 'Rols',
+	columns: {
+		id: { primary: true, type: 'int', generated: true },
+		name: { type: 'varchar' },
+		description: { type: 'varchar' },
+	},
+	relations: {
+		Clients: {
+			target: 'Clients',
+			type: 'one-to-many',
+			joinColumn: true,
+			cascade: true,
 		},
-		{ freezeTableName: true, timestamps: false },
-	);
-
-	return rols;
-};
+	},
+});

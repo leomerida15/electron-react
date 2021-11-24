@@ -1,20 +1,34 @@
-module.exports = (sequelize, type) => {
-	const { INTEGER, STRING } = type;
+const { EntitySchema } = require('typeorm');
 
-	const products = sequelize.define(
-		'products',
-		{
-			id: { type: INTEGER, primaryKey: true, autoIncrement: true },
-			id_user: { type: INTEGER },
-			id_category: { type: INTEGER },
-			id_vendor: { type: INTEGER },
-			name: { type: STRING },
-			price: { type: INTEGER },
-			stock: { type: INTEGER },
-			description: { type: STRING },
+module.exports = new EntitySchema({
+	name: 'Products',
+	columns: {
+		id: { primary: true, type: 'int', generated: true },
+		id_user: { type: 'int' },
+		id_category: { type: 'int' },
+		id_vendor: { type: 'int' },
+		name: { type: 'varchar' },
+		price: { type: 'int' },
+		stock: { type: 'int' },
+		description: { type: 'varchar' },
+	},
+	relations: {
+		Users: {
+			target: 'Users',
+			type: 'many-to-one',
+			joinColumn: { name: 'id_user' },
 		},
-		{ freezeTableName: true, timestamps: false },
-	);
-
-	return products;
-};
+		categorys: {
+			target: 'Categorys',
+			type: 'many-to-one',
+			joinColumn: { name: 'id_category' },
+			cascade: true,
+		},
+		// categories: {
+		// 	target: 'Users',
+		// 	type: 'many-to-one',
+		// 	joinColumn: { name: 'id_user' },
+		// 	cascade: true,
+		// },
+	},
+});

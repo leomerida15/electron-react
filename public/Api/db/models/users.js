@@ -1,18 +1,31 @@
-module.exports = (sequelize, type) => {
-	const { INTEGER, STRING, BOOLEAN } = type;
+const { EntitySchema } = require('typeorm');
 
-	const users = sequelize.define(
-		'users',
-		{
-			id: { type: INTEGER, primaryKey: true, autoIncrement: true },
-			email: { type: STRING, unique: true },
-			password: { type: STRING },
-			id_img: { type: INTEGER },
-			id_rol: { type: INTEGER, defaultValue: 3 },
-			active: { type: BOOLEAN, defaultValue: true },
+module.exports = new EntitySchema({
+	name: 'Users',
+	columns: {
+		id: { primary: true, type: 'int', generated: true },
+		email: { type: 'varchar', unique: true },
+		password: { type: 'varchar' },
+		id_img: { type: 'int' },
+		id_rol: { type: 'int', default: 3 },
+		active: { type: 'varchar', default: true },
+	},
+	relations: {
+		imgs: {
+			target: 'Imgs',
+			type: 'one-to-one',
+			joinColumn: { name: 'id_img' },
+			cascade: true,
 		},
-		{ freezeTableName: true, timestamps: false },
-	);
-
-	return users;
-};
+		categorys: {
+			target: 'Categorys',
+			type: 'one-to-many',
+			joinColumn: true,
+		},
+		products: {
+			target: 'Products',
+			type: 'one-to-many',
+			joinColumn: true,
+		},
+	},
+});

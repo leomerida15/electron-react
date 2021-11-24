@@ -1,26 +1,13 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const fs = require('fs');
-const init_models = require('./models');
-const keys = require('./keys');
-const contents = require('./contents');
+const typeorm = require('typeorm');
 const path = require('path');
-// conet with database
+const fs = require('fs');
 
-const storage = path.resolve('public/Api/db/sql/DB.sqlite');
+const database = path.resolve('public/Api/db/sql/DB.sqlite');
+const models = path.resolve('public/Api/db/models');
 
-const sequelize = new Sequelize({ dialect: 'sqlite', storage, logging: false });
+const entities = fs.readdirSync(models).map((file) => path.join(models, file));
 
-// inits
-const model = init_models(sequelize, DataTypes);
-
-keys(model);
-
-const force = process.env.npm_lifecycle_event === 'DB:refresh';
-sequelize.sync({ force: true }).then(async (resp) => {
-	if (force) await contents(model);
-
-	if (resp) console.log('Init DB SUCCESS');
-	else console.log('Init DB err');
-});
-
-module.exports = model;
+module.exports = typeorm
+	.createConnection({ type: 'sqlite', database, synchronize: true, entities })
+	.then((connection) => connection)
+	.catch((error) => console.log(error));

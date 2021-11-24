@@ -1,27 +1,34 @@
-module.exports = (sequelize, type) => {
-	const { INTEGER, STRING, JSON } = type;
+const { EntitySchema } = require('typeorm');
 
-	const historys = sequelize.define(
-		'historys',
-		{
-			id: { type: INTEGER, primaryKey: true, autoIncrement: true },
-			id_client: { type: INTEGER },
-			id_user: { type: INTEGER },
-			//
-			esferea: { type: JSON, defaultValue: `{ oi:'', od:'' }` }, // { oi:'', od:'' }
-			//
-			eje: { type: JSON, defaultValue: `{ oi:'', od:'' }` },
-			//
-			cilindro: { type: JSON, defaultValue: `{ oi:'', od:'' }` },
-			//
-			add: { type: JSON, defaultValue: `{ oi:'', od:'' }` },
-			//
-			dp: { type: JSON, defaultValue: `{ oi:'', od:'' }` },
-			//
-			note: { type: STRING },
+module.exports = new EntitySchema({
+	name: 'Historys',
+	columns: {
+		id: { primary: true, type: 'int', generated: true },
+		//
+		id_client: { type: 'int' },
+		id_user: { type: 'int' },
+		//
+		esferea_oi: { type: 'varchar' },
+		esferea_od: { type: 'varchar' },
+		//
+		eje_oi: { type: 'varchar' },
+		eje_od: { type: 'varchar' },
+		//
+		cilindro_oi: { type: 'varchar' },
+		cilindro_od: { type: 'varchar' },
+		//
+		add_oi: { type: 'varchar' },
+		add_od: { type: 'varchar' },
+		//
+		dp_oi: { type: 'varchar' },
+		dp_od: { type: 'varchar' },
+	},
+	relations: {
+		Clients: {
+			target: 'Clients',
+			type: 'many-to-one',
+			joinColumn: { name: 'id_client' },
+			cascade: true,
 		},
-		{ freezeTableName: true, timestamps: true },
-	);
-
-	return historys;
-};
+	},
+});
